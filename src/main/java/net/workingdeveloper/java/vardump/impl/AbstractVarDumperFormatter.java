@@ -3,6 +3,7 @@ package net.workingdeveloper.java.vardump.impl;
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * Created by Christoph Graupner on 2016-10-21.
@@ -79,6 +80,13 @@ abstract public class AbstractVarDumperFormatter extends BasicVarDumperFormatter
     @Override
     public IVarDumperFormatter openArray(Object aObject) {
         append(getObjectName(aObject, true));
+        int lSize = -1;
+        if (aObject.getClass().isArray()) {
+            lSize = ((Object[]) aObject).length;
+        } else if (aObject instanceof Collection) {
+            lSize = ((Collection) aObject).size();
+        }
+        append("(").append(Integer.toString(lSize)).append(")");
         append("[");
         return this;
     }
