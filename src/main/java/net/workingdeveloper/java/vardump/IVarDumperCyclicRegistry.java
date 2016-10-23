@@ -6,9 +6,9 @@ package net.workingdeveloper.java.vardump;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public interface IVarDumperCyclicRegistry {
-    IVarDumperCyclicRegistry register(Object aObject);
+    IVarDumperCyclicRegistry clear();
 
     boolean isRegistered(Object aObject);
 
-    IVarDumperCyclicRegistry clear();
+    IVarDumperCyclicRegistry register(Object aObject);
 }

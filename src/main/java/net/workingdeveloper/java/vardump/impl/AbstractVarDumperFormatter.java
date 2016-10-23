@@ -1,9 +1,6 @@
 package net.workingdeveloper.java.vardump.impl;
 
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MarkerFactory;
 
 import java.io.IOException;
 
@@ -12,13 +9,10 @@ import java.io.IOException;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-abstract public class AbstractVarDumperFormatter implements IVarDumperFormatter {
+abstract public class AbstractVarDumperFormatter extends BasicVarDumperFormatter implements IVarDumperFormatter {
 
-    protected Appendable fBuffer;
-    private Logger logger = LoggerFactory.getLogger(VarDumperFormatterImpl.class);
-
-    public AbstractVarDumperFormatter(Appendable aBuffer) {
-        fBuffer = aBuffer;
+    public AbstractVarDumperFormatter(Appendable aBuffer, boolean aShortClassName) {
+        super(aBuffer, aShortClassName);
     }
 
     @Override
@@ -31,30 +25,25 @@ abstract public class AbstractVarDumperFormatter implements IVarDumperFormatter 
     }
 
     @Override
-    public IVarDumperFormatter appendFieldValue(Object aObject) {
-        append(aObject.toString());
+    public IVarDumperFormatter appendField(Object lFieldName) {
+        append(getObjectName(lFieldName, false));
         return this;
     }
 
     @Override
-    public IVarDumperFormatter appendFieldValueReference(Object aObject) {
-        append("ref:").append(aObject.getClass().getName())
-                      .append('@')
-                      .append(Integer.toHexString(System.identityHashCode(aObject)));
+    public IVarDumperFormatter appendPrimitiveFieldValue(Object aObject) {
+        append('(').append(aObject.getClass().getSimpleName()).append(")");
+        if (aObject instanceof CharSequence) {
+            append('"').append(aObject.toString()).append('"');
+        } else {
+            append(aObject.toString());
+        }
         return this;
     }
 
     @Override
-    public IVarDumperFormatter appendNull() {
-        append("<null>");
-        return this;
-    }
-
-    @Override
-    public IVarDumperFormatter appendStartDump(String fName, Object aClassOfObject) {
-        append(fName)
-                .append('@')
-                .append(Integer.toHexString(System.identityHashCode(aClassOfObject)));
+    public IVarDumperFormatter appendStartDump(Object aObject) {
+        append(getObjectName(aObject, false));
         return this;
     }
 
@@ -76,55 +65,46 @@ abstract public class AbstractVarDumperFormatter implements IVarDumperFormatter 
     }
 
     @Override
-    public IVarDumperFormatter closeObject(String aName) {
+    public IVarDumperFormatter closeMap(Object aObject) {
+        append("}");
+        return this;
+    }
+
+    @Override
+    public IVarDumperFormatter closeObject(Object aName) {
         append("}");
         return this;
     }
 
     @Override
     public IVarDumperFormatter openArray(Object aObject) {
+        append(getObjectName(aObject, true));
         append("[");
         return this;
     }
 
     @Override
     public IVarDumperFormatter openField(String aFieldName) {
-        append(aFieldName).append(" = ");
-        return this;
-    }
-
-    @Override
-    public IVarDumperFormatter openObject(String aName) {
-        append("{");
-        return this;
-    }
-
-    @Override
-    public IVarDumperFormatter setStringBuffer(Appendable aBuffer) {
-        fBuffer = aBuffer;
-        return this;
-    }
-
-    @Override
-    public String toString() {
-        return fBuffer.toString();
-    }
-
-    protected VarDumperFormatterImpl append(CharSequence csq) {
-        try {
-            fBuffer.append(csq);
-        } catch (IOException aE) {
-            logger.error(MarkerFactory.getMarker("EXCEPTION"), aE.getLocalizedMessage(), aE);
+        append(aFieldName);
+        if (fContextStack.peek() == State.MAP) {
+            append(": ");
+        } else {
+            append(" = ");
         }
         return this;
     }
 
-    protected VarDumperFormatterImpl append(char c) {
-        try {
-            fBuffer.append(c);
-        } catch (IOException aE) {
-            logger.error(MarkerFactory.getMarker("EXCEPTION"), aE.getLocalizedMessage(), aE);
-        }
+    @Override
+    public IVarDumperFormatter openMap(Object aObject) {
+        append(getObjectName(aObject, true));
+        append(" {");
+        return this;
+    }
+
+    @Override
+    public IVarDumperFormatter openObject(Object aName) {
+        append(getObjectName(aName, false));
+        append(" {");
         return this;
     }
 }

@@ -6,7 +6,7 @@ package net.workingdeveloper.java.vardump;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public interface IVarDumper {
-    String vardump(Object aObject);
+    String vardump(final Object aObject);
 
-    String vardump(Object aObject, IVarDumperFormatter aStringBuilder);
+    String vardump(final Object aObject, final IVarDumperFormatter aStringBuilder);
 }

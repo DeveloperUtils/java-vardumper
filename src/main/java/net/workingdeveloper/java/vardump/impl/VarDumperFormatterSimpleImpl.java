@@ -10,7 +10,7 @@ import net.workingdeveloper.java.vardump.IVarDumperFormatter;
 public class VarDumperFormatterSimpleImpl
         extends AbstractVarDumperFormatter
         implements IVarDumperFormatter {
-    public VarDumperFormatterSimpleImpl(Appendable aBuffer) {
-        super(aBuffer);
+    public VarDumperFormatterSimpleImpl(Appendable aBuffer, boolean aShortClassName) {
+        super(aBuffer, aShortClassName);
     }
 }

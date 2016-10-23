@@ -11,7 +11,7 @@ public class VarDumperFormatterImpl
         extends AbstractVarDumperFormatter
         implements IVarDumperFormatter {
 
-    public VarDumperFormatterImpl(Appendable aBuffer) {
-        super(aBuffer);
+    public VarDumperFormatterImpl(Appendable aBuffer, boolean aShortClassName) {
+        super(aBuffer, aShortClassName);
     }
 }

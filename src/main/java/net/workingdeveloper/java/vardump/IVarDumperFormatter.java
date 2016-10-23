@@ -7,11 +7,19 @@ package net.workingdeveloper.java.vardump;
  */
 public interface IVarDumperFormatter {
 
+    IVarDumperFormatter appendField(String lFieldName);
+
+    IVarDumperFormatter appendField(Object lFieldName);
+
     IVarDumperFormatter appendFieldValueReference(Object aObject);
 
-    IVarDumperFormatter appendFieldValue(Object aObject);
-
     IVarDumperFormatter appendNull();
+
+    IVarDumperFormatter appendPrimitiveFieldValue(Object aObject);
+
+    IVarDumperFormatter appendStartDump(Object aClassOfObject);
+
+    IVarDumperFormatter appendString(String aName);
 
     IVarDumperFormatter appendSubField(String aVardump);
 
@@ -19,19 +27,19 @@ public interface IVarDumperFormatter {
 
     IVarDumperFormatter closeField(String aFieldName);
 
-    IVarDumperFormatter closeObject(String aName);
+    IVarDumperFormatter closeMap(Object aObject);
+
+    IVarDumperFormatter closeObject(Object aName);
 
     IVarDumperFormatter openArray(Object aObject);
 
     IVarDumperFormatter openField(String aFieldName);
 
-    IVarDumperFormatter openObject(String aName);
+    IVarDumperFormatter openMap(Object aObject);
+
+    IVarDumperFormatter openObject(Object aName);
 
     IVarDumperFormatter setStringBuffer(Appendable aBuffer);
-
-    IVarDumperFormatter appendField(String lFieldName);
-
-    IVarDumperFormatter appendStartDump(String fName, Object aClassOfObject);
 
     String toString();
 }
