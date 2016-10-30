@@ -94,7 +94,7 @@ abstract public class AbstractVarDumperFormatter extends BasicVarDumperFormatter
     @Override
     public IVarDumperFormatter openField(String aFieldName) {
         append(aFieldName);
-        if (fContextStack.peek() == State.MAP) {
+        if (!fContextStack.empty() && fContextStack.peek() == State.MAP) {
             append(": ");
         } else {
             append(" = ");

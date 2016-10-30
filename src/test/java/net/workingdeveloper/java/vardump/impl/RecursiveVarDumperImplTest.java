@@ -18,7 +18,9 @@ public class RecursiveVarDumperImplTest {
 
         public TestCyclic(TestCyclic aParent) {
             fParent = aParent;
-            if (fParent != null) { fParent.fChild = this; }
+            if (fParent != null) {
+                fParent.fChild = this;
+            }
         }
     }
 
@@ -44,8 +46,9 @@ public class RecursiveVarDumperImplTest {
         TestCyclic lParent1 = new TestCyclic(lParent0);
         TestCyclic lChild   = new TestCyclic(lParent1);
         RecursiveVarDumperImpl lSut = new RecursiveVarDumperImpl(
-                new VarDumperFormatterImpl(new StringBuilder(), aShortClassName),
-                aFieldPredicate, new VarDumperCyclicRegistryImpl()
+                new VarDumperFormatterImpl(new StringBuilder(), true),
+                field -> true,
+                new VarDumperCyclicRegistryImpl()
         );
         System.out.println(lSut.vardump(lParent0));
         System.out.println(lSut.vardump(lParent1));
@@ -55,8 +58,9 @@ public class RecursiveVarDumperImplTest {
     @Test
     public void vardumpInheritedClasses() throws Exception {
         RecursiveVarDumperImpl lSut = new RecursiveVarDumperImpl(
-                new VarDumperFormatterImpl(new StringBuilder(), aShortClassName),
-                aFieldPredicate, new VarDumperCyclicRegistryImpl()
+                new VarDumperFormatterImpl(new StringBuilder(), true),
+                field -> true,
+                new VarDumperCyclicRegistryImpl()
         );
         Object d1 = new TestHierarchyRoot();
         System.out.println(lSut.vardump(d1));
@@ -67,8 +71,9 @@ public class RecursiveVarDumperImplTest {
     @Test
     public void vardumpLists() throws Exception {
         RecursiveVarDumperImpl lSut = new RecursiveVarDumperImpl(
-                new VarDumperFormatterImpl(new StringBuilder(), aShortClassName),
-                aFieldPredicate, new VarDumperCyclicRegistryImpl()
+                new VarDumperFormatterImpl(new StringBuilder(), true),
+                aField -> true,
+                new VarDumperCyclicRegistryImpl()
         );
         Object[] d1 = new TestPrimitives[5];
         System.out.println(lSut.vardump(d1));
@@ -79,8 +84,9 @@ public class RecursiveVarDumperImplTest {
     @Test
     public void vardumpPrimitives() throws Exception {
         RecursiveVarDumperImpl lSut = new RecursiveVarDumperImpl(
-                new VarDumperFormatterImpl(new StringBuilder(), aShortClassName),
-                aFieldPredicate, new VarDumperCyclicRegistryImpl()
+                new VarDumperFormatterImpl(new StringBuilder(), true),
+                aField -> true,
+                new VarDumperCyclicRegistryImpl()
         );
         System.out.println(lSut.vardump("hallo"));
         System.out.println(lSut.vardump(1));
@@ -89,8 +95,9 @@ public class RecursiveVarDumperImplTest {
     @Test
     public void vardumpSimpleClasses() throws Exception {
         RecursiveVarDumperImpl lSut = new RecursiveVarDumperImpl(
-                new VarDumperFormatterImpl(new StringBuilder(), aShortClassName),
-                aFieldPredicate, new VarDumperCyclicRegistryImpl()
+                new VarDumperFormatterImpl(new StringBuilder(), true),
+                aField -> true,
+                new VarDumperCyclicRegistryImpl()
         );
         Object d1 = new TestEmpty();
         System.out.println(lSut.vardump(d1));
