@@ -27,7 +27,7 @@ public class VarDumpFactory {
         return new FieldAcceptorPredicate(aExcludeFieldNames, aAppendStatics, aAppendTransients);
     }
 
-    public IVarDumperFormatter createIndentFormatter(Appendable aAppendable, int aIndent, boolean aShortClassNames) {
+    public IVarDumperFormatter createIndentFormatter(AppendableFactory aAppendable, int aIndent, boolean aShortClassNames) {
         return new VarDumperIndentFormatterImpl(aAppendable, aIndent, aShortClassNames);
     }
 
@@ -48,6 +48,10 @@ public class VarDumpFactory {
                 getDefaultFormatter(), getDefaultFieldPredicate(), getDefaultCyclicRegistry());
     }
 
+    public AppendableFactory getDefaultAppendableFactory() {
+        return StringBuilder::new;
+    }
+
     public IVarDumperCyclicRegistry getDefaultCyclicRegistry() {
         return new VarDumperCyclicRegistryImpl();
     }
@@ -57,6 +61,10 @@ public class VarDumpFactory {
     }
 
     public IVarDumperFormatter getDefaultFormatter() {
-        return new VarDumperIndentFormatterImpl(new StringBuilder(), 2, false);
+        return new VarDumperIndentFormatterImpl(
+                getDefaultAppendableFactory(),
+                2,
+                false
+        );
     }
 }

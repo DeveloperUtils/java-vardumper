@@ -39,7 +39,9 @@ public interface IVarDumperFormatter {
 
     IVarDumperFormatter openObject(Object aName);
 
-    IVarDumperFormatter setStringBuffer(Appendable aBuffer);
+    IVarDumperFormatter reset();
+
+    IVarDumperFormatter setAppendableFactory(AppendableFactory aAppendableFactory);
 
     String toString();
 }

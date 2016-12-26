@@ -1,5 +1,6 @@
 package net.workingdeveloper.java.vardump.impl;
 
+import net.workingdeveloper.java.vardump.AppendableFactory;
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;
 
 /**
@@ -10,7 +11,7 @@ import net.workingdeveloper.java.vardump.IVarDumperFormatter;
 public class VarDumperFormatterSimpleImpl
         extends AbstractVarDumperFormatter
         implements IVarDumperFormatter {
-    public VarDumperFormatterSimpleImpl(Appendable aBuffer, boolean aShortClassName) {
-        super(aBuffer, aShortClassName);
+    public VarDumperFormatterSimpleImpl(AppendableFactory aAppendableFactory, boolean aShortClassName) {
+        super(aAppendableFactory, aShortClassName);
     }
 }

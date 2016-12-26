@@ -1,5 +1,6 @@
 package net.workingdeveloper.java.vardump.impl;
 
+import net.workingdeveloper.java.vardump.AppendableFactory;
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,12 +22,17 @@ abstract public class BasicVarDumperFormatter implements IVarDumperFormatter {
     protected Appendable fBuffer;
     Stack<State> fContextStack   = new Stack<>();
     boolean      fShortClassName = false;
+    private AppendableFactory fBufferFactory;
     private String fRefString = "REF>>";
     private Logger logger     = LoggerFactory.getLogger(VarDumperFormatterImpl.class);
 
-    public BasicVarDumperFormatter(Appendable aBuffer, boolean aShortClassName) {
-        fBuffer = aBuffer;
+    /**
+     * @param aAppendableFactory Could be a lamba like <code>StringBuilder::new</code>.
+     * @param aShortClassName    <em>true</em> if the outputted class name should be just the class itself without the package name.
+     */
+    public BasicVarDumperFormatter(AppendableFactory aAppendableFactory, boolean aShortClassName) {
         fShortClassName = aShortClassName;
+        setAppendableFactory(aAppendableFactory);
     }
 
     @Override
@@ -48,8 +54,15 @@ abstract public class BasicVarDumperFormatter implements IVarDumperFormatter {
     }
 
     @Override
-    public IVarDumperFormatter setStringBuffer(Appendable aBuffer) {
-        fBuffer = aBuffer;
+    public IVarDumperFormatter reset() {
+        fBuffer = fBufferFactory.createAppendable();
+        return this;
+    }
+
+    @Override
+    public IVarDumperFormatter setAppendableFactory(AppendableFactory aAppendableFactory) {
+        fBufferFactory = aAppendableFactory;
+        fBuffer = aAppendableFactory.createAppendable();
         return this;
     }
 

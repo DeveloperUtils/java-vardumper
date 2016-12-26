@@ -65,6 +65,7 @@ public class RecursiveVarDumperImpl implements IVarDumper {
 
     @Override
     public String vardump(final Object aObject, final IVarDumperFormatter aFormatter) {
+        reset();
         setFormatter(aFormatter);
         reflectionSwitch(aObject);
         return getFormatter().toString();
@@ -118,6 +119,10 @@ public class RecursiveVarDumperImpl implements IVarDumper {
 
             reflectObjectField(aObject, clazz);
         }
+    }
+
+    private void reset() {
+        getFormatter().reset();
     }
 
     private void reflectMap(Object aObject) {

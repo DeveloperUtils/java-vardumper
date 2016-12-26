@@ -1,5 +1,6 @@
 package net.workingdeveloper.java.vardump.impl;
 
+import net.workingdeveloper.java.vardump.AppendableFactory;
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;
 
 /**
@@ -11,7 +12,7 @@ public class VarDumperIndentFormatterImpl extends AbstractVarDumperFormatter imp
     private final int fIndentLevel;
     private       int fCurrentIndention;
 
-    public VarDumperIndentFormatterImpl(Appendable aBuffer, int aIndentLevel, boolean aShortClassName) {
+    public VarDumperIndentFormatterImpl(AppendableFactory aBuffer, int aIndentLevel, boolean aShortClassName) {
         super(aBuffer, aShortClassName);
         fIndentLevel = aIndentLevel;
     }
