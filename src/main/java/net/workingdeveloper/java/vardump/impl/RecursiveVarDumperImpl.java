@@ -3,6 +3,7 @@ package net.workingdeveloper.java.vardump.impl;
 import net.workingdeveloper.java.vardump.IVarDumper;
 import net.workingdeveloper.java.vardump.IVarDumperCyclicRegistry;
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;
+import net.workingdeveloper.java.vardump.impl.formatter.VarDumperFormatterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MarkerFactory;

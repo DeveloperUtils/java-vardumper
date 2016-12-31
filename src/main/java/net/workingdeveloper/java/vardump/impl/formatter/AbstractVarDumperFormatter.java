@@ -1,4 +1,4 @@
-package net.workingdeveloper.java.vardump.impl;
+package net.workingdeveloper.java.vardump.impl.formatter;
 
 import net.workingdeveloper.java.vardump.AppendableFactory;
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;
@@ -41,6 +41,8 @@ abstract public class AbstractVarDumperFormatter extends BasicVarDumperFormatter
         append('(').append(aObject.getClass().getSimpleName()).append(")");
         if (aObject instanceof CharSequence) {
             append('"').append(aObject.toString()).append('"');
+        } else if (aObject instanceof Character) {
+            append('\'').append(aObject.toString()).append('\'');
         } else {
             append(aObject.toString());
         }

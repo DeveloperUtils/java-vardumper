@@ -2,7 +2,7 @@ package net.workingdeveloper.java.vardump;
 
 import net.workingdeveloper.java.vardump.impl.RecursiveVarDumperImpl;
 import net.workingdeveloper.java.vardump.impl.VarDumperCyclicRegistryImpl;
-import net.workingdeveloper.java.vardump.impl.VarDumperIndentFormatterImpl;
+import net.workingdeveloper.java.vardump.impl.formatter.VarDumperIndentFormatterImpl;
 
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
@@ -12,13 +12,13 @@ import java.util.function.Predicate;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-public class VarDumpFactory {
+public class VarDumperFactory {
 
-    protected static VarDumpFactory sfInstance;
+    protected static VarDumperFactory sfInstance;
 
-    public static VarDumpFactory instance() {
+    public static VarDumperFactory instance() {
         if (null == sfInstance) {
-            sfInstance = new VarDumpFactory();
+            sfInstance = new VarDumperFactory();
         }
         return sfInstance;
     }

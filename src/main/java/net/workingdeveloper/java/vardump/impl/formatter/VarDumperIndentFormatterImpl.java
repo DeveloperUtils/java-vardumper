@@ -1,4 +1,4 @@
-package net.workingdeveloper.java.vardump.impl;
+package net.workingdeveloper.java.vardump.impl.formatter;
 
 import net.workingdeveloper.java.vardump.AppendableFactory;
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;

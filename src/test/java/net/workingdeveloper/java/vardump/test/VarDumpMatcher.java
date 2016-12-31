@@ -23,7 +23,7 @@ public class VarDumpMatcher extends TypeSafeMatcher<String> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("matches regular expression=`" + fMatch + "`");
+        description.appendText("vardump '" + fMatch + "'");
     }
 
     @Override
