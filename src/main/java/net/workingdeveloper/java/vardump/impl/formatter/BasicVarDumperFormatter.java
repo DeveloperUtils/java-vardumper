@@ -17,6 +17,8 @@ import java.util.Stack;
  */
 abstract public class BasicVarDumperFormatter implements IVarDumperFormatter {
 
+    protected IVarDumperFormatterFactory fFactory;
+
     enum State {MAP, OBJECT, ARRAY, FIELD}
 
     protected Appendable fBuffer;
@@ -24,15 +26,17 @@ abstract public class BasicVarDumperFormatter implements IVarDumperFormatter {
     boolean      fShortClassName = false;
     private AppendableFactory fBufferFactory;
     private String fRefString = "REF>>";
-    private Logger logger     = LoggerFactory.getLogger(VarDumperFormatterImpl.class);
+    private Logger logger     = LoggerFactory.getLogger(BasicVarDumperFormatter.class);
 
     /**
      * @param aAppendableFactory Could be a lamba like <code>StringBuilder::new</code>.
      * @param aShortClassName    <em>true</em> if the outputted class name should be just the class itself without the package name.
+     * @param aFormatterFactory
      */
-    public BasicVarDumperFormatter(AppendableFactory aAppendableFactory, boolean aShortClassName) {
+    protected BasicVarDumperFormatter(AppendableFactory aAppendableFactory, boolean aShortClassName, IVarDumperFormatterFactory aFormatterFactory) {
         fShortClassName = aShortClassName;
         setAppendableFactory(aAppendableFactory);
+        fFactory = aFormatterFactory;
     }
 
     @Override
@@ -47,7 +51,6 @@ abstract public class BasicVarDumperFormatter implements IVarDumperFormatter {
         return this;
     }
 
-    @Override
     public IVarDumperFormatter appendString(String aName) {
         append(aName);
         return this;

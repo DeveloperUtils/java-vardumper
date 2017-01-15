@@ -2,7 +2,7 @@ package net.workingdeveloper.java.vardump;
 
 import net.workingdeveloper.java.vardump.impl.RecursiveVarDumperImpl;
 import net.workingdeveloper.java.vardump.impl.VarDumperCyclicRegistryImpl;
-import net.workingdeveloper.java.vardump.impl.formatter.VarDumperIndentFormatterImpl;
+import net.workingdeveloper.java.vardump.impl.formatter.indent.FormatterFactory;
 
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
@@ -28,7 +28,9 @@ public class VarDumperFactory {
     }
 
     public IVarDumperFormatter createIndentFormatter(AppendableFactory aAppendable, int aIndent, boolean aShortClassNames) {
-        return new VarDumperIndentFormatterImpl(aAppendable, aIndent, aShortClassNames);
+        final FormatterFactory lFormatterFactory = FormatterFactory.createInstance(
+                aAppendable, aIndent, aShortClassNames);
+        return lFormatterFactory.createVarDumperFormatter(aAppendable, aIndent, aShortClassNames);
     }
 
     public IVarDumper createRecursiveDumper(IVarDumperFormatter aFormatter) {
@@ -61,7 +63,7 @@ public class VarDumperFactory {
     }
 
     public IVarDumperFormatter getDefaultFormatter() {
-        return new VarDumperIndentFormatterImpl(
+        return createIndentFormatter(
                 getDefaultAppendableFactory(),
                 2,
                 false

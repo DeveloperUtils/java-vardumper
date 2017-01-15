@@ -3,7 +3,7 @@ package net.workingdeveloper.java.vardump.impl;
 import net.workingdeveloper.java.vardump.IVarDumper;
 import net.workingdeveloper.java.vardump.IVarDumperCyclicRegistry;
 import net.workingdeveloper.java.vardump.IVarDumperFormatter;
-import net.workingdeveloper.java.vardump.impl.formatter.VarDumperFormatterImpl;
+import net.workingdeveloper.java.vardump.formatter.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MarkerFactory;
@@ -28,7 +28,7 @@ public class RecursiveVarDumperImpl implements IVarDumper {
     private boolean             fAppendTransients;
     private IVarDumperFormatter fFormatter;
     private Class<?>            fUpToClass;
-    private Logger logger = LoggerFactory.getLogger(VarDumperFormatterImpl.class);
+    private Logger logger = LoggerFactory.getLogger(RecursiveVarDumperImpl.class);
 
     public RecursiveVarDumperImpl(final IVarDumperFormatter aFormatter, final Predicate<Field> aFieldPredicate, final IVarDumperCyclicRegistry aRegistry) {
         fFormatter = aFormatter;
@@ -68,8 +68,11 @@ public class RecursiveVarDumperImpl implements IVarDumper {
     public String vardump(final Object aObject, final IVarDumperFormatter aFormatter) {
         reset();
         setFormatter(aFormatter);
-        reflectionSwitch(aObject);
-        return getFormatter().toString();
+        final IVarDumperFormatter lFormatter = getFormatter();
+        lFormatter.startDump();
+        reflectionSwitch(aObject, lFormatter);
+        lFormatter.endDump();
+        return lFormatter.toString();
     }
 
     @Override
@@ -96,8 +99,7 @@ public class RecursiveVarDumperImpl implements IVarDumper {
         return true;
     }
 
-    protected void reflectionSwitch(final Object aObject) {
-        IVarDumperFormatter lFormatter = getFormatter();
+    protected void reflectionSwitch(final Object aObject, final IContainerElementFormatter lFormatter) {
         if (null == aObject) {
             lFormatter.appendNull();
             return;
@@ -105,20 +107,25 @@ public class RecursiveVarDumperImpl implements IVarDumper {
 
         final Class<?> clazz = aObject.getClass();
         if (isPrimitiveType(aObject)) {
-            lFormatter.appendPrimitiveFieldValue(aObject);
-            return;
-        }
-//        lFormatter.appendStartDump(aObject);
-
-        if (isArrayType(aObject)) {
-            reflectArray(aObject);
+            lFormatter.openPrimitive()
+                      .appendPrimitive(aObject)
+                      .close();
+        } else if (isArrayType(aObject)) {
+            final IArrayFormatter lArrayFormatter = lFormatter.openArray((Object[]) aObject);
+            reflectArray(aObject, lArrayFormatter);
+            lArrayFormatter.close();
         } else if (isCollectionType(aObject)) {
-            reflectCollection(aObject);
+            final IArrayFormatter lArrayFormatter = lFormatter.openArray((Collection<?>) aObject);
+            reflectCollection(aObject, lArrayFormatter);
+            lArrayFormatter.close();
         } else if (isMapType(aObject)) {
-            reflectMap(aObject);
+            final IMapFormatter lMapFormatter = lFormatter.openMap((Map<?, ?>) aObject);
+            reflectMap(aObject, lMapFormatter);
+            lMapFormatter.close();
         } else {
-
-            reflectObjectField(aObject, clazz);
+            final IObjectFormatter lObjectFormatter = lFormatter.openObject(aObject);
+            reflectObject(aObject, clazz, lObjectFormatter);
+            lObjectFormatter.close();
         }
     }
 
@@ -126,57 +133,64 @@ public class RecursiveVarDumperImpl implements IVarDumper {
         getFormatter().reset();
     }
 
-    private void reflectMap(Object aObject) {
+    private void reflectMap(Object aObject, IMapFormatter aFormatter) {
         Map<?, ?>                      lMapObject = (Map<?, ?>) aObject;
         Set<? extends Map.Entry<?, ?>> lEntrySet  = lMapObject.entrySet();
-        IVarDumperFormatter            lFormatter = getFormatter();
-        lFormatter.openMap(aObject);
+
         for (Map.Entry<?, ?> lEntry : lEntrySet) {
-            String lFieldName = lEntry.getKey().toString();
-            lFormatter.openField(lFieldName);
-            reflectionSwitch(lEntry.getValue());
-            lFormatter.closeField(lFieldName);
+            IMapEntryFormatter lEntryFormatter = aFormatter.openEntry(lEntry);
+            reflectionSwitch(lEntry.getValue(), lEntryFormatter);
+            lEntryFormatter.close();
         }
-        lFormatter.closeMap(aObject);
     }
 
     private boolean isMapType(Object aObject) {
         return aObject instanceof Map;
     }
 
-    private void reflectCollection(Object aObject) {
-        IVarDumperFormatter lFormatter = getFormatter();
-        Collection<?>       lArray     = (Collection<?>) aObject;
-        lFormatter.openArray(aObject);
+    private void reflectCollection(Object aObject, IArrayFormatter aLFormatter) {
+        Collection<?> lArray = (Collection<?>) aObject;
         for (Object lO : lArray) {
-            reflectionSwitch(lO);
+            IArrayEntryFormatter lEntryFormatter = aLFormatter.openEntry(lO);
+            reflectionSwitch(lO, lEntryFormatter);
+            lEntryFormatter.close();
         }
-        lFormatter.closeArray(aObject);
     }
 
-    private void appendFieldsIn(final Object aObject, final Class<?> aClazz) {
-        IVarDumperFormatter lFormatter = getFormatter();
-        final Field[]       fields     = aClazz.getDeclaredFields();
+    private void appendFieldsIn(final Object aObject, final Class<?> aClazz, IObjectFormatter aObjectFormatter) {
+        final Field[] fields = aClazz.getDeclaredFields();
         AccessibleObject.setAccessible(fields, true);
         for (final Field field : fields) {
             final String fieldName = field.getName();
             if (accept(field)) {
+
                 try {
-                    lFormatter.openField(fieldName);
-                    Object lFieldValue = field.get(aObject);
-                    if (null == lFieldValue) {
-                        lFormatter.appendNull();
-                    } else if (getRegistry().isRegistered(lFieldValue)) {
-                        lFormatter.appendFieldValueReference(lFieldValue);
+                    IFieldFormatter lFieldFormatter = aObjectFormatter.openField(fieldName);
+                    if (isPrimitiveType(field)) {
+                        IPrimitiveFormatter lPrimitiveFormatter = lFieldFormatter.openPrimitive();
+                        lPrimitiveFormatter.appendPrimitive(aObject, field);
                     } else {
-                        getRegistry().register(lFieldValue);
-                        RecursiveVarDumperImpl lSubDumper = new RecursiveVarDumperImpl(
-                                getFormatter(), getFieldAcceptor(),
-                                getRegistry()
-                        );
-                        lSubDumper.varDumpSub(lFieldValue);
+                        Object lFieldValue = field.get(aObject);
+                        if (null == lFieldValue) {
+                            lFieldFormatter.appendNull();
+                        } else if (getRegistry().isRegistered(lFieldValue)) {
+                            lFieldFormatter.appendFieldValueReference(lFieldValue);
+                        } else {
+                            getRegistry().register(lFieldValue);
+                            RecursiveVarDumperImpl lSubDumper = new RecursiveVarDumperImpl(
+                                    getFormatter(), getFieldAcceptor(),
+                                    getRegistry()
+                            );
+                            IObjectFormatter lObjectFormatter = lFieldFormatter.openObject(lFieldValue);
+                            lSubDumper.reflectObject(
+                                    lFieldValue,
+                                    aObject.getClass(),
+                                    lObjectFormatter
+                            );
+                            lObjectFormatter.close();
+                        }
                     }
-                    lFormatter.closeField(fieldName);
+                    lFieldFormatter.close();
                 } catch (IllegalAccessException aE) {
                     logger.error(MarkerFactory.getMarker("EXCEPTION"), aE.getLocalizedMessage(), aE);
                 }
@@ -184,32 +198,23 @@ public class RecursiveVarDumperImpl implements IVarDumper {
         }
     }
 
-    private void reflectObjectField(final Object aObject, final Class<?> aClazz) {
-        IVarDumperFormatter lFormatter = getFormatter();
+    private void reflectObject(final Object aObject, final Class<?> aClazz, IObjectFormatter aLFormatter) {
         getRegistry().register(aObject);
-        lFormatter.openObject(aObject);
         Class<?> lClazz = aClazz;
-        appendFieldsIn(aObject, lClazz);
+        appendFieldsIn(aObject, lClazz, aLFormatter);
         while (lClazz.getSuperclass() != null && lClazz != this.getUpToClass()) {
             lClazz = lClazz.getSuperclass();
-            appendFieldsIn(aObject, lClazz);
+            appendFieldsIn(aObject, lClazz, aLFormatter);
         }
-
-        lFormatter.closeObject(aObject);
     }
 
-    private void varDumpSub(final Object aObject) {
-        reflectionSwitch(aObject);
-    }
-
-    private void reflectArray(final Object aObject) {
-        IVarDumperFormatter lFormatter = getFormatter();
-        Object[]            lArray     = (Object[]) aObject;
-        lFormatter.openArray(aObject);
+    private void reflectArray(final Object aObject, IArrayFormatter aLFormatter) {
+        Object[] lArray = (Object[]) aObject;
         for (Object lO : lArray) {
-            reflectionSwitch(lO);
+            IArrayEntryFormatter lEntryFormatter = aLFormatter.openEntry(lO);
+            reflectionSwitch(lO, lEntryFormatter);
+            lEntryFormatter.close();
         }
-        lFormatter.closeArray(aObject);
     }
 
     private boolean isArrayType(final Object aObject) {
@@ -220,13 +225,11 @@ public class RecursiveVarDumperImpl implements IVarDumper {
         return aObject instanceof Collection;
     }
 
+    private boolean isPrimitiveType(final Field aObject) {
+        return DumperUtils.isPrimitiveType(aObject);
+    }
+
     private boolean isPrimitiveType(final Object aObject) {
-        Class<?> lClass = aObject.getClass();
-        return lClass.isEnum()
-                || lClass.isPrimitive()
-                || aObject instanceof CharSequence
-                || aObject instanceof Number
-                || aObject instanceof Boolean
-                || aObject instanceof Character;
+        return DumperUtils.isPrimitiveType(aObject);
     }
 }

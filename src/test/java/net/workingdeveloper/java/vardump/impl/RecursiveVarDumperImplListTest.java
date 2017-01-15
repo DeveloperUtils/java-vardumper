@@ -25,10 +25,10 @@ public class RecursiveVarDumperImplListTest extends BaseTest {
         return new Object[][]{
                 {
                         new String[]{"h1", "h2"},
-                        "String[]@00000000(2)[(String)\"h1\"(String)\"h2\"]"
+                        "String[]@00000000(2)[(String)\"h1\",(String)\"h2\"]"
                 }, {
                         new Object[]{1, 0.1f, 0.3d, true, "hallo", 'C'},
-                        "Object[]@00000000(6)[(Integer)1(Float)0.1(Double)0.3(Boolean)true(String)\"hallo\"(Character)'C']"
+                        "Object[]@00000000(6)[(Integer)1,(Float)0.1,(Double)0.3,(Boolean)true,(String)\"hallo\",(Character)'C']"
                 }
         };
     }

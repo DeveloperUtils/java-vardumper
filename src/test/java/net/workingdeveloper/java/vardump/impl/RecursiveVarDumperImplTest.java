@@ -23,6 +23,10 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         TestCyclic             lParent1 = new TestCyclic(lParent0);
         TestCyclic             lChild   = new TestCyclic(lParent1);
         RecursiveVarDumperImpl lSut     = getRecursiveVarDumperSut();
+        assertThat(
+                lSut.vardump(lParent0),
+                matchesVarDump("TestCyclic@00000000{fChild = TestCyclic@00000000{}, fParent = null}")
+        );
         System.out.println(lSut.vardump(lParent0));
         System.out.println(lSut.vardump(lParent1));
         System.out.println(lSut.vardump(lChild));
@@ -56,6 +60,22 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         assertThat(lSut.vardump(0.1d), equalTo("(Double)0.1"));
         assertThat(lSut.vardump(true), equalTo("(Boolean)true"));
         assertThat(lSut.vardump(false), equalTo("(Boolean)false"));
+        boolean fBool   = true;
+        byte    fByte   = 127;
+        double  fDouble = 0x1.fffffffffffffP+1023;
+        float   fFloat  = 0x1.fffffeP+127f;
+        int     fInt    = 2147483647;
+        short   fShort  = 32767;
+        char    lChar   = 'f';
+        String  fString = "local";
+        assertThat(lSut.vardump(fString), equalTo("(String)\"local\""));
+        assertThat(lSut.vardump(lChar), equalTo("(Character)'f'"));
+        assertThat(lSut.vardump(fInt), equalTo("(Integer)2147483647"));
+        assertThat(lSut.vardump(fBool), equalTo("(Boolean)true"));
+        assertThat(lSut.vardump(fByte), equalTo("(Byte)127"));
+        assertThat(lSut.vardump(fShort), equalTo("(Short)32767"));
+        assertThat(lSut.vardump(fFloat), equalTo("(Float)3.4028235E38"));
+        assertThat(lSut.vardump(fDouble), equalTo("(Double)1.7976931348623157E308"));
     }
 
     @Test
@@ -64,13 +84,24 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         Object                 d1   = new TestEmpty();
         assertThat(
                 lSut.vardump(d1),
-                matchesVarDump("TestEmpty@00000000 {}")
+                matchesVarDump("TestEmpty@00000000{}")
         );
         d1 = new TestPrimitives();
+
         assertThat(
                 lSut.vardump(d1),
-                matchesVarDump("TestPrimitives@00000000 {}")
+                matchesVarDump(
+                        "TestPrimitives@00000000{fBool = (boolean)false; fByte = (byte)0; fChar = (char)'" + String.valueOf(
+                                (char)0) + "'; fDouble = (double)0.0;" +
+                                " fFloat = (float)0.0; fInt = (int)0; fShort = (short)0; fString = (String)<null>; }")
         );
-        System.out.println(lSut.vardump(d1));
+        d1 = new TestPrimitives(true, Byte.MAX_VALUE, 'g', 0.3d, 0.4f, Integer.MAX_VALUE, Short.MAX_VALUE, "hallo");
+        assertThat(
+
+                lSut.vardump(d1),
+                matchesVarDump(
+                        "TestPrimitives@00000000{fBool = (boolean)true; fByte = (byte)127; fChar = (char)'g'; fDouble = (double)0.3;" +
+                                " fFloat = (float)0.4; fInt = (int)2147483647; fShort = (short)32767; fString = (String)\"hallo\"; }")
+        );
     }
 }
