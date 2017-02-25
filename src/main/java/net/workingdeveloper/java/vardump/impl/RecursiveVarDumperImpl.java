@@ -175,31 +175,8 @@ public class RecursiveVarDumperImpl implements IVarDumper {
                             lFieldFormatter.appendNull();
                         } else if (getRegistry().isRegistered(lFieldValue)) {
                             lFieldFormatter.appendFieldValueReference(lFieldValue);
-                        } else if (isArrayType(lFieldValue)) {
-                            IArrayFormatter lArrayFormatter = lFieldFormatter.openArray((Object[]) lFieldValue);
-                            reflectArray(lFieldValue,lArrayFormatter);
-                            lArrayFormatter.close();
-                        } else if (isCollectionType(lFieldValue)) {
-                            IArrayFormatter lArrayFormatter = lFieldFormatter.openArray((Collection) lFieldValue);
-                            reflectCollection(lFieldValue,lArrayFormatter);
-                            lArrayFormatter.close();
-                        } else if (isMapType(lFieldValue)) {
-                            IMapFormatter lMapFormatter = lFieldFormatter.openMap((Map) lFieldValue);
-                            reflectMap(lFieldValue,lMapFormatter);
-                            lMapFormatter.close();
-                        } else {
-                            getRegistry().register(lFieldValue);
-                            RecursiveVarDumperImpl lSubDumper = new RecursiveVarDumperImpl(
-                                    getFormatter(), getFieldAcceptor(),
-                                    getRegistry()
-                            );
-                            IObjectFormatter lObjectFormatter = lFieldFormatter.openObject(lFieldValue);
-                            lSubDumper.reflectObject(
-                                    lFieldValue,
-                                    lFieldValue.getClass(),
-                                    lObjectFormatter
-                            );
-                            lObjectFormatter.close();
+                        } else  {
+                            reflectionSwitch(lFieldValue,lFieldFormatter);
                         }
                     }
                     lFieldFormatter.close();
