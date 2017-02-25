@@ -55,6 +55,9 @@ public class PrimitiveFormatter extends ElementFormatter<IElementFormatter> impl
                 case "int":
                     append("(int)").append(String.valueOf(aField.getInt(aParentObject)));
                     break;
+                case "long":
+                    append("(long)").append(String.valueOf(aField.getLong(aParentObject)));
+                    break;
                 case "short":
                     append("(short)").append(String.valueOf(aField.getShort(aParentObject)));
                     break;
