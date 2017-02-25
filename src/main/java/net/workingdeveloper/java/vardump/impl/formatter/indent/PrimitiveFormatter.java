@@ -12,12 +12,9 @@ import java.lang.reflect.Field;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public class PrimitiveFormatter extends ElementFormatter<IElementFormatter> implements IPrimitiveFormatter {
-    PrimitiveFormatter(IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
-        super(aParent, aBuffer, aFactory);
-    }
 
-    PrimitiveFormatter(Appendable aBuffer, FormatterFactory aFactory) {
-        super(aBuffer, aFactory);
+    PrimitiveFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
+        super(aIndention, aParent, aBuffer, aFactory);
     }
 
     @Override

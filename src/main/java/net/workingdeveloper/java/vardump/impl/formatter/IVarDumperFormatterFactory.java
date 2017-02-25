@@ -1,7 +1,6 @@
 package net.workingdeveloper.java.vardump.impl.formatter;
 
 import net.workingdeveloper.java.vardump.formatter.*;
-import net.workingdeveloper.java.vardump.impl.formatter.indent.ArrayFormatter;
 
 import java.util.Collection;
 import java.util.Map;
@@ -12,19 +11,19 @@ import java.util.Map;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public interface IVarDumperFormatterFactory {
-    IArrayEntryFormatter createArrayEntryFormatter(Object aObject, Appendable aBuffer, ArrayFormatter aParent, int aEntryNumber);
+    IArrayEntryFormatter createArrayEntryFormatter(Object aObject, Appendable aBuffer, int aEntryNumber, int aIndention, IArrayFormatter aParent);
 
-    IArrayFormatter createArrayFormatter(Collection<?> aCollection, Appendable aBuffer);
+    IArrayFormatter createArrayFormatter(Collection<?> aCollection, Appendable aBuffer, int aIndentation, IElementFormatter aParent);
 
-    IArrayFormatter createArrayFormatter(Object[] aArray, Appendable aBuffer);
+    IArrayFormatter createArrayFormatter(Object[] aArray, Appendable aBuffer, int aIndentation, IElementFormatter aParent);
 
-    IMapEntryFormatter createMapEntryFormatter(Map.Entry<?, ?> aEntry, Appendable aBuffer);
+    IMapEntryFormatter createMapEntryFormatter(Map.Entry<?, ?> aEntry, Appendable aBuffer, int aIndentation, IMapFormatter aParent);
 
-    IMapFormatter createMapFormatter(Map<?, ?> aMap, Appendable aBuffer);
+    IMapFormatter createMapFormatter(Map<?, ?> aMap, Appendable aBuffer, int aIndentation, IElementFormatter aParent);
 
-    IObjectFormatter createObjectFormatter(Object aObject, Appendable aBuffer);
+    IObjectFormatter createObjectFormatter(Object aObject, Appendable aBuffer, int aIndentation, IElementFormatter aParent);
 
-    IPrimitiveFormatter createPrimitiveFormatter(Appendable aBuffer);
+    IPrimitiveFormatter createPrimitiveFormatter(Appendable aBuffer, int aIndentation, IElementFormatter aParent);
 
     boolean isShortClassName();
 

@@ -17,16 +17,18 @@ public abstract class ElementFormatter<PARENT extends IElementFormatter> impleme
     final FormatterFactory fFactory;
     final Logger logger = LoggerFactory.getLogger(getClass());
     Appendable fBuffer;
-    PARENT fParent;
+    int        fIndentation;
+    PARENT     fParent;
 
-    ElementFormatter(PARENT aParent, Appendable aBuffer, FormatterFactory aFactory) {
+    ElementFormatter(int aIndention, PARENT aParent, Appendable aBuffer, FormatterFactory aFactory) {
+        fIndentation = aIndention;
         fParent = aParent;
         fBuffer = aBuffer;
         fFactory = aFactory;
     }
 
-    ElementFormatter(Appendable aBuffer, FormatterFactory aFactory) {
-        this(null, aBuffer, aFactory);
+    ElementFormatter(int aIndention, Appendable aBuffer, FormatterFactory aFactory) {
+        this(aIndention, null, aBuffer, aFactory);
     }
 
     @Override
@@ -52,9 +54,14 @@ public abstract class ElementFormatter<PARENT extends IElementFormatter> impleme
         return (PARENT) fParent;
     }
 
+    @Override
+    public int getIndentionLevel() {
+        return fIndentation;
+    }
+
     public abstract <T> ElementFormatter open(T aObject);
 
-    protected <T extends ElementFormatter> T append(CharSequence csq) {
+    protected <FLUENT extends ElementFormatter> FLUENT append(CharSequence csq) {
         try {
             fBuffer.append(csq);
             if (fBuffer instanceof Flushable) {
@@ -63,7 +70,7 @@ public abstract class ElementFormatter<PARENT extends IElementFormatter> impleme
         } catch (IOException aE) {
             logger.error(MarkerFactory.getMarker("EXCEPTION"), aE.getLocalizedMessage(), aE);
         }
-        return (T) this;
+        return (FLUENT) this;
     }
 
     protected <T extends ElementFormatter> T append(char c) {
@@ -76,6 +83,13 @@ public abstract class ElementFormatter<PARENT extends IElementFormatter> impleme
             logger.error(MarkerFactory.getMarker("EXCEPTION"), aE.getLocalizedMessage(), aE);
         }
         return (T) this;
+    }
+
+    protected <FLUENT extends ElementFormatter> FLUENT appendIndention() {
+        for (int i = 0; i < fIndentation; i++) {
+            append(fFactory.getIndentationString());
+        }
+        return (FLUENT) this;
     }
 
     protected abstract void appendClosing();

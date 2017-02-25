@@ -12,16 +12,16 @@ import java.util.Map;
  */
 public class MapEntryFormatter extends ContainerElementFormatter<IMapFormatter> implements IMapEntryFormatter {
 
-    @Override
-    public ElementFormatter open(Object aObject) {
-        Map.Entry aEntry = (Map.Entry) aObject;
-        String             lFieldName      = aEntry.getKey().toString();
-        append(lFieldName).append(": ");
-        return this;
+    MapEntryFormatter(int aIndention, IMapFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
+        super(aIndention, aParent, aBuffer, aFactory);
     }
 
-    public MapEntryFormatter(IMapFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
-        super(aParent, aBuffer, aFactory);
+    @Override
+    public ElementFormatter open(Object aObject) {
+        Map.Entry aEntry     = (Map.Entry) aObject;
+        String    lFieldName = aEntry.getKey().toString();
+        append(lFieldName).append(": ");
+        return this;
     }
 
     @Override

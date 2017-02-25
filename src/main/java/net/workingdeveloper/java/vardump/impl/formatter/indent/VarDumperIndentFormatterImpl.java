@@ -34,7 +34,7 @@ public class VarDumperIndentFormatterImpl extends ContainerElementFormatter<IEle
             boolean aShortClassName,
             FormatterFactory aFormatterFactory
     ) {
-        super(null, null,
+        super(aIndentLevel,null, null,
               aFormatterFactory
         );
         fAppendableFactory = aAppendableFactory;

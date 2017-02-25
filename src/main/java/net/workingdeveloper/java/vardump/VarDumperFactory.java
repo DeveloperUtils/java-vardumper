@@ -50,6 +50,15 @@ public class VarDumperFactory {
                 getDefaultFormatter(), getDefaultFieldPredicate(), getDefaultCyclicRegistry());
     }
 
+    public IVarDumper createRecursiveDumper(boolean aShortNames) {
+        return new RecursiveVarDumperImpl(
+                createIndentFormatter(
+                        getDefaultAppendableFactory(),
+                        2,
+                        aShortNames
+                ), getDefaultFieldPredicate(), getDefaultCyclicRegistry());
+    }
+
     public AppendableFactory getDefaultAppendableFactory() {
         return StringBuilder::new;
     }

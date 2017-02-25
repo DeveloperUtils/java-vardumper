@@ -11,32 +11,33 @@ import java.util.Map;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public abstract class ContainerElementFormatter<PARENT extends IElementFormatter> extends ElementFormatter<PARENT> implements IContainerElementFormatter {
-    public ContainerElementFormatter(PARENT aParent, Appendable aBuffer, FormatterFactory aFactory) {
-        super(aParent, aBuffer, aFactory);
+
+    ContainerElementFormatter(int aIndention, PARENT aParent, Appendable aBuffer, FormatterFactory aFactory) {
+        super(aIndention, aParent, aBuffer, aFactory);
     }
 
     @Override
     public IArrayFormatter openArray(Object[] aObjects) {
-        return fFactory.createArrayFormatter(aObjects,fBuffer);
+        return fFactory.createArrayFormatter(aObjects, fBuffer, getIndentionLevel() + 1, this);
     }
 
     @Override
     public IArrayFormatter openArray(Collection<?> aCollection) {
-        return fFactory.createArrayFormatter(aCollection, fBuffer);
+        return fFactory.createArrayFormatter(aCollection, fBuffer, getIndentionLevel() + 1, this);
     }
 
     @Override
     public IMapFormatter openMap(Map<?, ?> aMap) {
-        return fFactory.createMapFormatter(aMap,fBuffer);
+        return fFactory.createMapFormatter(aMap, fBuffer, getIndentionLevel() + 1, this);
     }
 
     @Override
     public IObjectFormatter openObject(Object aObject) {
-        return fFactory.createObjectFormatter(aObject,fBuffer);
+        return fFactory.createObjectFormatter(aObject, fBuffer, getIndentionLevel() + 1, this);
     }
 
     @Override
     public IPrimitiveFormatter openPrimitive() {
-        return fFactory.createPrimitiveFormatter(fBuffer);
+        return fFactory.createPrimitiveFormatter(fBuffer, getIndentionLevel() + 1, this);
     }
 }

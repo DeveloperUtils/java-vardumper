@@ -10,12 +10,9 @@ import net.workingdeveloper.java.vardump.formatter.IObjectFormatter;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public class ObjectFormatter extends ElementFormatter<IElementFormatter> implements IObjectFormatter {
-    ObjectFormatter(IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
-        super(aParent, aBuffer, aFactory);
-    }
 
-    ObjectFormatter(Appendable aBuffer, FormatterFactory aFactory) {
-        super(aBuffer, aFactory);
+    ObjectFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
+        super(aIndention, aParent, aBuffer, aFactory);
     }
 
     @Override
@@ -27,11 +24,12 @@ public class ObjectFormatter extends ElementFormatter<IElementFormatter> impleme
 
     @Override
     public IFieldFormatter openField(String aName) {
-        return fFactory.createFieldFormatter(aName, fBuffer);
+        append("\n");
+        return fFactory.createFieldFormatter(aName, fBuffer, getIndentionLevel()+1, this);
     }
 
     @Override
     protected void appendClosing() {
-        append("}");
+        append("\n").appendIndention().append("}");
     }
 }

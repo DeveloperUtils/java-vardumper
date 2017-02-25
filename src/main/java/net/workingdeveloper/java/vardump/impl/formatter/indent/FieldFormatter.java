@@ -9,13 +9,14 @@ import net.workingdeveloper.java.vardump.formatter.IFieldFormatter;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public class FieldFormatter extends ContainerElementFormatter<IElementFormatter> implements IFieldFormatter {
-    FieldFormatter(IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
-        super(aParent, aBuffer, aFactory);
+
+    FieldFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
+        super(aIndention, aParent, aBuffer, aFactory);
     }
 
     @Override
     public <T> ElementFormatter open(T aFieldName) {
-        append((CharSequence) aFieldName).append(" = ");
+        appendIndention().append((CharSequence) aFieldName).append(" = ");
         return this;
     }
 

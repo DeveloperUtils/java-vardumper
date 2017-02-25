@@ -15,6 +15,7 @@ public interface IElementFormatter {
 
     <PARENT extends IElementFormatter> PARENT close();
 
+    int getIndentionLevel();
 
     String toString();
 }

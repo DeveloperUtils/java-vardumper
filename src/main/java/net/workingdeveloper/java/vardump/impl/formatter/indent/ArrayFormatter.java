@@ -15,8 +15,8 @@ public class ArrayFormatter extends ElementFormatter<IElementFormatter> implemen
 
     private int fEntryCount = 0;
 
-    public ArrayFormatter(Appendable aBuffer, FormatterFactory aFactory) {
-        super(aBuffer, aFactory);
+    ArrayFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
+        super(aIndention, aParent, aBuffer, aFactory);
     }
 
     @Override
@@ -37,13 +37,13 @@ public class ArrayFormatter extends ElementFormatter<IElementFormatter> implemen
     @Override
     public IArrayEntryFormatter openEntry(Object aObject) {
         final IArrayEntryFormatter lArrayEntryFormatter = fFactory.createArrayEntryFormatter(
-                aObject, fBuffer, this, fEntryCount);
+                aObject, fBuffer, fEntryCount, getIndentionLevel()+1, this);
         fEntryCount++;
         return lArrayEntryFormatter;
     }
 
     @Override
     protected void appendClosing() {
-        append("]");
+        append("\n").appendIndention().append("]");
     }
 }
