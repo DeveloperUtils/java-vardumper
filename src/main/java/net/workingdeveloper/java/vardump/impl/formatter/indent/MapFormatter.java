@@ -11,15 +11,10 @@ import java.util.Map;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-public class MapFormatter extends ElementFormatter<IElementFormatter> implements IMapFormatter {
+class MapFormatter extends ElementFormatter<IElementFormatter> implements IMapFormatter {
 
     MapFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
         super(aIndention, aParent, aBuffer, aFactory);
-    }
-
-    @Override
-    protected void appendClosing() {
-        append("}");
     }
 
     @Override
@@ -31,6 +26,11 @@ public class MapFormatter extends ElementFormatter<IElementFormatter> implements
 
     @Override
     public IMapEntryFormatter openEntry(Map.Entry<?, ?> aObject) {
-        return fFactory.createMapEntryFormatter(aObject, fBuffer, getIndentionLevel()+1, this);
+        return fFactory.createMapEntryFormatter(aObject, fBuffer, getIndentionLevel() + 1, this);
+    }
+
+    @Override
+    protected void appendClosing() {
+        append("\n").appendIndention().append("}");
     }
 }

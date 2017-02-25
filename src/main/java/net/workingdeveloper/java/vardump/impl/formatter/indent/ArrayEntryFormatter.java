@@ -8,7 +8,7 @@ import net.workingdeveloper.java.vardump.formatter.IArrayFormatter;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-public class ArrayEntryFormatter extends ContainerElementFormatter<IArrayFormatter> implements IArrayEntryFormatter {
+class ArrayEntryFormatter extends ContainerElementFormatter<IArrayFormatter> implements IArrayEntryFormatter {
     private final int fEntryNumber;
 
     public ArrayEntryFormatter(int aIndention, IArrayFormatter aParent, Appendable aBuffer, FormatterFactory aFactory, int aEntryNumber) {

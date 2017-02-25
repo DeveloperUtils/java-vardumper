@@ -10,7 +10,7 @@ import net.workingdeveloper.java.vardump.impl.formatter.indent.FormatterFactory;
 abstract class BaseTest {
     protected RecursiveVarDumperImpl getRecursiveVarDumperSut() {
         return new RecursiveVarDumperImpl(
-                FormatterFactory.createInstance(StringBuilder::new, 2, true)
+                FormatterFactory.createInstance(StringBuilder::new, "  ", true)
                                 .createVarDumperFormatter(),
                 aField -> true,
                 new VarDumperCyclicRegistryImpl()

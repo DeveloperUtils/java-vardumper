@@ -9,7 +9,7 @@ import net.workingdeveloper.java.vardump.formatter.IObjectFormatter;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-public class ObjectFormatter extends ElementFormatter<IElementFormatter> implements IObjectFormatter {
+class ObjectFormatter extends ElementFormatter<IElementFormatter> implements IObjectFormatter {
 
     ObjectFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
         super(aIndention, aParent, aBuffer, aFactory);

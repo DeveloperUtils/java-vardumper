@@ -14,27 +14,25 @@ public class VarDumperIndentFormatterImpl extends ContainerElementFormatter<IEle
 
     /**
      * @param aAppendableFactory Could be a lamba like <code>StringBuilder::new</code>.
-     * @param aIndentLevel
+     * @param aIndentString
      * @param aShortClassName    <em>true</em> if the outputted class name should be just the class itself without the package name.
      */
     VarDumperIndentFormatterImpl(
             AppendableFactory aAppendableFactory,
-            int aIndentLevel,
+            String aIndentString,
             boolean aShortClassName
     ) {
         this(
-                aAppendableFactory, aIndentLevel, aShortClassName,
-                FormatterFactory.createInstance(aAppendableFactory, aIndentLevel, aShortClassName)
+                aAppendableFactory,
+                FormatterFactory.createInstance(aAppendableFactory, aIndentString, aShortClassName)
         );
     }
 
     VarDumperIndentFormatterImpl(
             AppendableFactory aAppendableFactory,
-            int aIndentLevel,
-            boolean aShortClassName,
             FormatterFactory aFormatterFactory
     ) {
-        super(aIndentLevel,null, null,
+        super(0, null, null,
               aFormatterFactory
         );
         fAppendableFactory = aAppendableFactory;
@@ -49,11 +47,6 @@ public class VarDumperIndentFormatterImpl extends ContainerElementFormatter<IEle
     @Override
     public <T> ElementFormatter open(T aObject) {
         return null;
-    }
-
-    @Override
-    protected void appendClosing() {
-
     }
 
     @Override
@@ -75,5 +68,10 @@ public class VarDumperIndentFormatterImpl extends ContainerElementFormatter<IEle
     @Override
     public String toString() {
         return fBuffer.toString();
+    }
+
+    @Override
+    protected void appendClosing() {
+
     }
 }

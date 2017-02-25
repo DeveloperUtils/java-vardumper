@@ -27,10 +27,10 @@ public class VarDumperFactory {
         return new FieldAcceptorPredicate(aExcludeFieldNames, aAppendStatics, aAppendTransients);
     }
 
-    public IVarDumperFormatter createIndentFormatter(AppendableFactory aAppendable, int aIndent, boolean aShortClassNames) {
+    public IVarDumperFormatter createIndentFormatter(AppendableFactory aAppendable, String aIndentString, boolean aShortClassNames) {
         final FormatterFactory lFormatterFactory = FormatterFactory.createInstance(
-                aAppendable, aIndent, aShortClassNames);
-        return lFormatterFactory.createVarDumperFormatter(aAppendable, aIndent, aShortClassNames);
+                aAppendable, aIndentString, aShortClassNames);
+        return lFormatterFactory.createVarDumperFormatter(aAppendable, aIndentString, aShortClassNames);
     }
 
     public IVarDumper createRecursiveDumper(IVarDumperFormatter aFormatter) {
@@ -50,13 +50,16 @@ public class VarDumperFactory {
                 getDefaultFormatter(), getDefaultFieldPredicate(), getDefaultCyclicRegistry());
     }
 
-    public IVarDumper createRecursiveDumper(boolean aShortNames) {
+    public IVarDumper createRecursiveDumper(boolean aShortNames, String aIndentString) {
         return new RecursiveVarDumperImpl(
                 createIndentFormatter(
                         getDefaultAppendableFactory(),
-                        2,
+                        aIndentString,
                         aShortNames
-                ), getDefaultFieldPredicate(), getDefaultCyclicRegistry());
+                ),
+                getDefaultFieldPredicate(),
+                getDefaultCyclicRegistry()
+        );
     }
 
     public AppendableFactory getDefaultAppendableFactory() {
@@ -74,8 +77,8 @@ public class VarDumperFactory {
     public IVarDumperFormatter getDefaultFormatter() {
         return createIndentFormatter(
                 getDefaultAppendableFactory(),
-                2,
-                false
+                FormatterFactory.INDENT_STRING,
+                FormatterFactory.DEFAULT_SHORT_CLASS_NAME
         );
     }
 }

@@ -8,7 +8,7 @@ import net.workingdeveloper.java.vardump.formatter.IFieldFormatter;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-public class FieldFormatter extends ContainerElementFormatter<IElementFormatter> implements IFieldFormatter {
+class FieldFormatter extends ContainerElementFormatter<IElementFormatter> implements IFieldFormatter {
 
     FieldFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
         super(aIndention, aParent, aBuffer, aFactory);

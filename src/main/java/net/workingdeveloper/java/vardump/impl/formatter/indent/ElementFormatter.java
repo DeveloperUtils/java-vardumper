@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-public abstract class ElementFormatter<PARENT extends IElementFormatter> implements IElementFormatter {
+abstract class ElementFormatter<PARENT extends IElementFormatter> implements IElementFormatter {
     final FormatterFactory fFactory;
     final Logger logger = LoggerFactory.getLogger(getClass());
     Appendable fBuffer;

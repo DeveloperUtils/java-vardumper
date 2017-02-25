@@ -14,31 +14,32 @@ import java.util.Map;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public class FormatterFactory implements IVarDumperFormatterFactory {
-    private static FormatterFactory  sfInstance;
+    public static final String INDENT_STRING = "  ";
+    public static final boolean DEFAULT_SHORT_CLASS_NAME = true;
+    private static FormatterFactory sfInstance;
     private final  AppendableFactory fAppendableFactory;
-    private final  int               fIndentLevel;
-    private final String fNullString        = "<null>";
-    private final String fRefString         = "REF>>";
-    private       String fIndentationString = "  ";
+    private final String fNullString = "<null>";
+    private final String fRefString  = "REF>>";
+    private String  fIndentationString;
     private boolean fShortClassName;
 
-    public FormatterFactory(AppendableFactory aAppendableFactory, int aIndentLevel, boolean aShortClassName) {
+    protected FormatterFactory(AppendableFactory aAppendableFactory, String aIndentString, boolean aShortClassName) {
         fShortClassName = aShortClassName;
         fAppendableFactory = aAppendableFactory;
-        fIndentLevel = aIndentLevel;
+        fIndentationString = aIndentString;
     }
 
     public static FormatterFactory createInstance(
             AppendableFactory aAppendableFactory,
-            int aIndentLevel,
+            String aIndentString,
             boolean aShortClassName
     ) {
-        return new FormatterFactory(aAppendableFactory, aIndentLevel, aShortClassName);
+        return new FormatterFactory(aAppendableFactory, aIndentString, aShortClassName);
     }
 
     public static FormatterFactory getDefaultInstance() {
         if (sfInstance == null) {
-            sfInstance = createInstance(StringBuilder::new, 2, true);
+            sfInstance = createInstance(StringBuilder::new, INDENT_STRING, DEFAULT_SHORT_CLASS_NAME);
         }
         return sfInstance;
     }
@@ -98,12 +99,16 @@ public class FormatterFactory implements IVarDumperFormatterFactory {
         return new PrimitiveFormatter(aIndentation, aParent, aBuffer, this);
     }
 
-    public IVarDumperFormatter createVarDumperFormatter(AppendableFactory aBuffer, int aIndentLevel, boolean aShortClassName) {
-        return new VarDumperIndentFormatterImpl(aBuffer, aIndentLevel, aShortClassName);
+    public IVarDumperFormatter createVarDumperFormatter(AppendableFactory aBuffer, String aIndentString, boolean aShortClassName) {
+        return new VarDumperIndentFormatterImpl(aBuffer, aIndentString, aShortClassName);
     }
 
     public IVarDumperFormatter createVarDumperFormatter() {
-        return createVarDumperFormatter(fAppendableFactory, fIndentLevel, fShortClassName);
+        return createVarDumperFormatter(getAppendableFactory(), getIndentationString(), isShortClassName());
+    }
+
+    public AppendableFactory getAppendableFactory() {
+        return fAppendableFactory;
     }
 
     public String getIndentationString() {

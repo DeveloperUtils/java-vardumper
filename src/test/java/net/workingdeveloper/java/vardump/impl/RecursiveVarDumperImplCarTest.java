@@ -2,7 +2,6 @@ package net.workingdeveloper.java.vardump.impl;
 
 import net.workingdeveloper.java.vardump.VarDumperFactory;
 import net.workingdeveloper.java.vardump.test.test_object.car.*;
-import org.apache.commons.lang3.text.StrBuilder;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -30,6 +29,6 @@ public class RecursiveVarDumperImplCarTest {
                 new Chassis("Blue"), lEngines, lBrakes, lTyres, lSeats,
                 new StearingWheel(19.7f), 164
         );
-        System.out.printf(VarDumperFactory.instance().createRecursiveDumper(true).vardump(lCar));
+        System.out.printf(VarDumperFactory.instance().createRecursiveDumper(true, "  ").vardump(lCar));
     }
 }

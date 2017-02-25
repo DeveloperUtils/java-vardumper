@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-public class PrimitiveFormatter extends ElementFormatter<IElementFormatter> implements IPrimitiveFormatter {
+class PrimitiveFormatter extends ElementFormatter<IElementFormatter> implements IPrimitiveFormatter {
 
     PrimitiveFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
         super(aIndention, aParent, aBuffer, aFactory);

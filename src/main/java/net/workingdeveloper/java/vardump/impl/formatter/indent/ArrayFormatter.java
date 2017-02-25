@@ -11,7 +11,7 @@ import java.util.Collection;
  *
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
-public class ArrayFormatter extends ElementFormatter<IElementFormatter> implements IArrayFormatter {
+class ArrayFormatter extends ElementFormatter<IElementFormatter> implements IArrayFormatter {
 
     private int fEntryCount = 0;
 
