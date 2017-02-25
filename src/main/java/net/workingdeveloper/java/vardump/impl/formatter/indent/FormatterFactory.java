@@ -43,8 +43,8 @@ public class FormatterFactory implements IVarDumperFormatterFactory {
     }
 
     @Override
-    public IArrayEntryFormatter createArrayEntryFormatter(Object aObject, Appendable aBuffer) {
-        final ArrayEntryFormatter lArrayEntryFormatter = new ArrayEntryFormatter(null, aBuffer, this);
+    public IArrayEntryFormatter createArrayEntryFormatter(Object aObject, Appendable aBuffer, ArrayFormatter aParent, int aEntryNumber) {
+        final ArrayEntryFormatter lArrayEntryFormatter = new ArrayEntryFormatter(aParent, aBuffer, this, aEntryNumber);
         lArrayEntryFormatter.open(aObject);
         return lArrayEntryFormatter;
     }
@@ -105,6 +105,10 @@ public class FormatterFactory implements IVarDumperFormatterFactory {
 
     public String getNullString() {
         return fNullString;
+    }
+
+    public String getRefString() {
+        return fRefString;
     }
 
     @Override

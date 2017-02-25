@@ -6,5 +6,5 @@ package net.workingdeveloper.java.vardump.formatter;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public interface IArrayFormatter extends IElementFormatter {
-IArrayEntryFormatter openEntry(Object aObject);
+    IArrayEntryFormatter openEntry(Object aObject);
 }

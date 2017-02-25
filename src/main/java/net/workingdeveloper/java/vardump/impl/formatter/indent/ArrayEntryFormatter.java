@@ -8,17 +8,22 @@ import net.workingdeveloper.java.vardump.formatter.IArrayEntryFormatter;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public class ArrayEntryFormatter extends ContainerElementFormatter<ArrayFormatter> implements IArrayEntryFormatter {
-    public ArrayEntryFormatter(ArrayFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
+    private final int fEntryNumber;
+
+    public ArrayEntryFormatter(ArrayFormatter aParent, Appendable aBuffer, FormatterFactory aFactory, int aEntryNumber) {
         super(aParent, aBuffer, aFactory);
+        fEntryNumber = aEntryNumber;
     }
 
     @Override
     public <T> ElementFormatter open(T aObject) {
+        if (fEntryNumber > 0)
+            append(",");
         return this;
     }
 
     @Override
     protected void appendClosing() {
-        append(",");
+
     }
 }

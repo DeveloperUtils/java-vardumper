@@ -1,6 +1,7 @@
 package net.workingdeveloper.java.vardump.impl.formatter;
 
 import net.workingdeveloper.java.vardump.formatter.*;
+import net.workingdeveloper.java.vardump.impl.formatter.indent.ArrayFormatter;
 
 import java.util.Collection;
 import java.util.Map;
@@ -11,7 +12,7 @@ import java.util.Map;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public interface IVarDumperFormatterFactory {
-    IArrayEntryFormatter createArrayEntryFormatter(Object aObject, Appendable aBuffer);
+    IArrayEntryFormatter createArrayEntryFormatter(Object aObject, Appendable aBuffer, ArrayFormatter aParent, int aEntryNumber);
 
     IArrayFormatter createArrayFormatter(Collection<?> aCollection, Appendable aBuffer);
 

@@ -13,6 +13,8 @@ import java.util.Collection;
  */
 public class ArrayFormatter extends ElementFormatter<IElementFormatter> implements IArrayFormatter {
 
+    private int fEntryCount = 0;
+
     public ArrayFormatter(Appendable aBuffer, FormatterFactory aFactory) {
         super(aBuffer, aFactory);
     }
@@ -34,7 +36,10 @@ public class ArrayFormatter extends ElementFormatter<IElementFormatter> implemen
 
     @Override
     public IArrayEntryFormatter openEntry(Object aObject) {
-        return fFactory.createArrayEntryFormatter(aObject, fBuffer);
+        final IArrayEntryFormatter lArrayEntryFormatter = fFactory.createArrayEntryFormatter(
+                aObject, fBuffer, this, fEntryCount);
+        fEntryCount++;
+        return lArrayEntryFormatter;
     }
 
     @Override

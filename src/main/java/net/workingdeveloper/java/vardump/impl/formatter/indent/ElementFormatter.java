@@ -14,16 +14,10 @@ import java.io.IOException;
  * @author Christoph Graupner <ch.graupner@workingdeveloper.net>
  */
 public abstract class ElementFormatter<PARENT extends IElementFormatter> implements IElementFormatter {
-    Appendable       fBuffer;
     final FormatterFactory fFactory;
     final Logger logger = LoggerFactory.getLogger(getClass());
+    Appendable fBuffer;
     PARENT fParent;
-
-    public abstract <T> ElementFormatter open(T aObject);
-
-    protected PARENT getParent() {
-        return fParent;
-    }
 
     ElementFormatter(PARENT aParent, Appendable aBuffer, FormatterFactory aFactory) {
         fParent = aParent;
@@ -42,7 +36,8 @@ public abstract class ElementFormatter<PARENT extends IElementFormatter> impleme
 
     @Override
     public <FLUENT extends IElementFormatter> FLUENT appendFieldValueReference(Object aObject) {
-        return null;
+        append(fFactory.getRefString()).append(getObjectName(aObject, false));
+        return (FLUENT) this;
     }
 
     @Override
@@ -50,6 +45,14 @@ public abstract class ElementFormatter<PARENT extends IElementFormatter> impleme
         append(fFactory.getNullString());
         return (FLUENT) this;
     }
+
+    @Override
+    public <PARENT extends IElementFormatter> PARENT close() {
+        appendClosing();
+        return (PARENT) fParent;
+    }
+
+    public abstract <T> ElementFormatter open(T aObject);
 
     protected <T extends ElementFormatter> T append(CharSequence csq) {
         try {
@@ -75,6 +78,8 @@ public abstract class ElementFormatter<PARENT extends IElementFormatter> impleme
         return (T) this;
     }
 
+    protected abstract void appendClosing();
+
     protected String getClassName(Object aObject, boolean aAsSimpleName) {
         if (aAsSimpleName || fFactory.isShortClassName()) {
             return aObject.getClass().getSimpleName();
@@ -87,11 +92,7 @@ public abstract class ElementFormatter<PARENT extends IElementFormatter> impleme
         return getClassName(aObject, aAsSimpleName) + '@' + Integer.toHexString(System.identityHashCode(aObject));
     }
 
-    @Override
-    public <PARENT extends IElementFormatter> PARENT close() {
-        appendClosing();
-        return (PARENT) fParent;
+    protected PARENT getParent() {
+        return fParent;
     }
-
-    protected abstract void appendClosing();
 }
