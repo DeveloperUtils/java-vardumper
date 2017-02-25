@@ -1,7 +1,7 @@
 package net.workingdeveloper.java.vardump.impl;
 
-import net.workingdeveloper.java.vardump.impl.test_object.TestEmpty;
-import net.workingdeveloper.java.vardump.impl.test_object.TestPrimitives;
+import net.workingdeveloper.java.vardump.test.test_object.TestEmpty;
+import net.workingdeveloper.java.vardump.test.test_object.TestPrimitives;
 import org.junit.Test;
 
 import java.lang.reflect.Field;

@@ -23,11 +23,16 @@ public class VarDumpMatcher extends TypeSafeMatcher<String> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("vardump '" + fMatch + "'");
+        description.appendValue(fMatch);
     }
 
     @Override
     protected boolean matchesSafely(String item) {
         return item.replaceAll(UNIFIER, REPLACEMENT).equals(fMatch);
+    }
+
+    @Override
+    protected void describeMismatchSafely(String item, Description mismatchDescription) {
+        super.describeMismatchSafely(item.replaceAll(UNIFIER, REPLACEMENT), mismatchDescription);
     }
 }

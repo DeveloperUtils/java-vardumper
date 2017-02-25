@@ -3,7 +3,7 @@ package net.workingdeveloper.java.vardump.impl;
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
 import com.tngtech.java.junit.dataprovider.UseDataProvider;
-import net.workingdeveloper.java.vardump.impl.test_object.TestPrimitives;
+import net.workingdeveloper.java.vardump.test.test_object.TestPrimitives;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -67,6 +67,10 @@ public class RecursiveVarDumperImplListTest extends BaseTest {
         assertThat(lSut.vardump(aInput), matchesVarDump(aExpected));
     }
 
+    public void vardumpArrayObjects() throws Exception {
+//        TestPrimitives
+    }
+
     @Test
     public void vardumpListNull() throws Exception {
         RecursiveVarDumperImpl lSut = getRecursiveVarDumperSut();
@@ -76,10 +80,24 @@ public class RecursiveVarDumperImplListTest extends BaseTest {
     }
 
     @Test
-    public void vardumpListPrimitives() throws Exception {
+    public void vardumpListPrimitiveObjects() throws Exception {
         RecursiveVarDumperImpl lSut = getRecursiveVarDumperSut();
         List<TestPrimitives>   d2   = new ArrayList<>();
         System.out.println(lSut.vardump(d2));
         assertThat(lSut.vardump(d2), matchesVarDump("ArrayList@6a38e57f(0)[]"));
+
+        d2 = new ArrayList<>();
+        d2.add(new TestPrimitives(true, Byte.MAX_VALUE, 'g', 0.3d, 0.4f, Integer.MAX_VALUE, Short.MAX_VALUE, "hallo"));
+        d2.add(new TestPrimitives(
+                false, Byte.MIN_VALUE, 'l', -0.3d, -0.4f, Integer.MIN_VALUE, Short.MIN_VALUE, "tschüß"));
+        System.out.println(lSut.vardump(d2));
+        assertThat(lSut.vardump(d2), matchesVarDump(
+                "ArrayList@6a38e57f(2)[" +
+                        "TestPrimitives@0000{fBool = (boolean)true; fByte = (byte)127; fChar = (char)'g'; fDouble = (double)0.3;" +
+                        " fFloat = (float)0.4; fInt = (int)2147483647; fShort = (short)32767; fString = (String)\"hallo\"; }," +
+                        "TestPrimitives@0000{fBool = (boolean)false; fByte = (byte)-128; fChar = (char)'l'; fDouble = (double)-0.3;" +
+                        " fFloat = (float)-0.4; fInt = (int)-2147483648; fShort = (short)-32768; fString = (String)\"tschüß\"; }" +
+                        "]")
+        );
     }
 }

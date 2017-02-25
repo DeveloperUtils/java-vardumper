@@ -1,6 +1,6 @@
 package net.workingdeveloper.java.vardump.impl;
 
-import net.workingdeveloper.java.vardump.impl.test_object.*;
+import net.workingdeveloper.java.vardump.test.test_object.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -23,9 +23,12 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         TestCyclic             lParent1 = new TestCyclic(lParent0);
         TestCyclic             lChild   = new TestCyclic(lParent1);
         RecursiveVarDumperImpl lSut     = getRecursiveVarDumperSut();
+        //@fixme better matchesVarDump '"TestCyclic@0000{fChild = TestCyclic@0001{fChild = <null>; fParent = REF>>TestCyclic@0000; };, fParent = null}"'
         assertThat(
                 lSut.vardump(lParent0),
-                matchesVarDump("TestCyclic@00000000{fChild = TestCyclic@00000000{}, fParent = null}")
+                matchesVarDump(
+                        "TestCyclic@0000{fChild = TestCyclic@0000{fChild = TestCyclic@0000{fChild = <null>; fParent = REF>>TestCyclic@0000; }; fParent = REF>>TestCyclic@0000; }; fParent = <null>; }"
+                )
         );
         System.out.println(lSut.vardump(lParent0));
         System.out.println(lSut.vardump(lParent1));
@@ -84,15 +87,15 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         Object                 d1   = new TestEmpty();
         assertThat(
                 lSut.vardump(d1),
-                matchesVarDump("TestEmpty@00000000{}")
+                matchesVarDump("TestEmpty@0000{}")
         );
         d1 = new TestPrimitives();
 
         assertThat(
                 lSut.vardump(d1),
                 matchesVarDump(
-                        "TestPrimitives@00000000{fBool = (boolean)false; fByte = (byte)0; fChar = (char)'" + String.valueOf(
-                                (char)0) + "'; fDouble = (double)0.0;" +
+                        "TestPrimitives@0000{fBool = (boolean)false; fByte = (byte)0; fChar = (char)'" + String.valueOf(
+                                (char) 0) + "'; fDouble = (double)0.0;" +
                                 " fFloat = (float)0.0; fInt = (int)0; fShort = (short)0; fString = (String)<null>; }")
         );
         d1 = new TestPrimitives(true, Byte.MAX_VALUE, 'g', 0.3d, 0.4f, Integer.MAX_VALUE, Short.MAX_VALUE, "hallo");
@@ -100,7 +103,7 @@ public class RecursiveVarDumperImplTest extends BaseTest {
 
                 lSut.vardump(d1),
                 matchesVarDump(
-                        "TestPrimitives@00000000{fBool = (boolean)true; fByte = (byte)127; fChar = (char)'g'; fDouble = (double)0.3;" +
+                        "TestPrimitives@0000{fBool = (boolean)true; fByte = (byte)127; fChar = (char)'g'; fDouble = (double)0.3;" +
                                 " fFloat = (float)0.4; fInt = (int)2147483647; fShort = (short)32767; fString = (String)\"hallo\"; }")
         );
     }
