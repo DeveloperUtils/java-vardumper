@@ -12,12 +12,19 @@ import java.util.Map;
  */
 class MapEntryFormatter extends ContainerElementFormatter<IMapFormatter> implements IMapEntryFormatter {
 
-    MapEntryFormatter(int aIndention, IMapFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
+    private final int fEntryNumber;
+
+    MapEntryFormatter(int aIndention, IMapFormatter aParent, Appendable aBuffer, FormatterFactory aFactory, int aEntryNumber) {
         super(aIndention, aParent, aBuffer, aFactory);
+        fEntryNumber = aEntryNumber;
     }
 
     @Override
     public ElementFormatter open(Object aObject) {
+        if (fEntryNumber > 0) {
+            append(",");
+        }
+        append("\n").appendIndention();
         Map.Entry aEntry     = (Map.Entry) aObject;
         String    lFieldName = aEntry.getKey().toString();
         append(lFieldName).append(": ");
@@ -26,6 +33,6 @@ class MapEntryFormatter extends ContainerElementFormatter<IMapFormatter> impleme
 
     @Override
     protected void appendClosing() {
-        append(",");
+
     }
 }

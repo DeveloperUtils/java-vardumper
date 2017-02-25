@@ -59,6 +59,7 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         assertThat(lSut.vardump("hallo"), equalTo("(String)\"hallo\""));
         assertThat(lSut.vardump('D'), equalTo("(Character)'D'"));
         assertThat(lSut.vardump(1), equalTo("(Integer)1"));
+        assertThat(lSut.vardump(1L), equalTo("(Long)1"));
         assertThat(lSut.vardump(0.1f), equalTo("(Float)0.1"));
         assertThat(lSut.vardump(0.1d), equalTo("(Double)0.1"));
         assertThat(lSut.vardump(true), equalTo("(Boolean)true"));
@@ -69,11 +70,14 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         float   fFloat  = 0x1.fffffeP+127f;
         int     fInt    = 2147483647;
         short   fShort  = 32767;
+        long    fLong   = 0x7fffffffffffffffL;
         char    lChar   = 'f';
         String  fString = "local";
         assertThat(lSut.vardump(fString), equalTo("(String)\"local\""));
         assertThat(lSut.vardump(lChar), equalTo("(Character)'f'"));
         assertThat(lSut.vardump(fInt), equalTo("(Integer)2147483647"));
+//        assertThat(lSut.vardump(fLong), equalTo("(Long)0x7fffffffffffffffL"));
+        assertThat(lSut.vardump(fLong), equalTo("(Long)9223372036854775807"));
         assertThat(lSut.vardump(fBool), equalTo("(Boolean)true"));
         assertThat(lSut.vardump(fByte), equalTo("(Byte)127"));
         assertThat(lSut.vardump(fShort), equalTo("(Short)32767"));

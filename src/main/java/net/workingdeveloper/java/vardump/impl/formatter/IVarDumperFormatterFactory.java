@@ -17,7 +17,7 @@ public interface IVarDumperFormatterFactory {
 
     IArrayFormatter createArrayFormatter(Object[] aArray, Appendable aBuffer, int aIndentation, IElementFormatter aParent);
 
-    IMapEntryFormatter createMapEntryFormatter(Map.Entry<?, ?> aEntry, Appendable aBuffer, int aIndentation, IMapFormatter aParent);
+    IMapEntryFormatter createMapEntryFormatter(Map.Entry<?, ?> aEntry, Appendable aBuffer, int aEntryNumber, int aIndentation, IMapFormatter aParent);
 
     IMapFormatter createMapFormatter(Map<?, ?> aMap, Appendable aBuffer, int aIndentation, IElementFormatter aParent);
 

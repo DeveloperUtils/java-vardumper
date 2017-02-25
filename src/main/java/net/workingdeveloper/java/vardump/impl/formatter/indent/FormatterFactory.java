@@ -74,8 +74,8 @@ public class FormatterFactory implements IVarDumperFormatterFactory {
     }
 
     @Override
-    public IMapEntryFormatter createMapEntryFormatter(Map.Entry<?, ?> aEntry, Appendable aBuffer, int aIndentation, IMapFormatter aParent) {
-        final MapEntryFormatter lMapEntryFormatter = new MapEntryFormatter(aIndentation, aParent, aBuffer, this);
+    public IMapEntryFormatter createMapEntryFormatter(Map.Entry<?, ?> aEntry, Appendable aBuffer, int aEntryNumber, int aIndentation, IMapFormatter aParent) {
+        final MapEntryFormatter lMapEntryFormatter = new MapEntryFormatter(aIndentation, aParent, aBuffer, this,aEntryNumber);
         lMapEntryFormatter.open(aEntry);
         return lMapEntryFormatter;
     }

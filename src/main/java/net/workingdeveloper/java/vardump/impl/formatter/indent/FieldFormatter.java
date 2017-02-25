@@ -22,6 +22,6 @@ class FieldFormatter extends ContainerElementFormatter<IElementFormatter> implem
 
     @Override
     protected void appendClosing() {
-        append("; ");
+        append(";");
     }
 }

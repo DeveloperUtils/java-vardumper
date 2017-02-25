@@ -13,6 +13,8 @@ import java.util.Map;
  */
 class MapFormatter extends ElementFormatter<IElementFormatter> implements IMapFormatter {
 
+    private int fEntryCount = 0;
+
     MapFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
         super(aIndention, aParent, aBuffer, aFactory);
     }
@@ -20,13 +22,16 @@ class MapFormatter extends ElementFormatter<IElementFormatter> implements IMapFo
     @Override
     public <T> ElementFormatter open(T aMap) {
         append(getObjectName(aMap, true));
-        append(" {");
+        append("{");
         return this;
     }
 
     @Override
     public IMapEntryFormatter openEntry(Map.Entry<?, ?> aObject) {
-        return fFactory.createMapEntryFormatter(aObject, fBuffer, getIndentionLevel() + 1, this);
+        final IMapEntryFormatter lMapEntryFormatter = fFactory.createMapEntryFormatter(
+                aObject, fBuffer, fEntryCount, getIndentionLevel() + 1, this);
+        fEntryCount++;
+        return lMapEntryFormatter;
     }
 
     @Override
