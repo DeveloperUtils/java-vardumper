@@ -7,6 +7,10 @@ package net.workingdeveloper.java.vardump.formatter;
  */
 public interface IElementFormatter {
 
+    enum Literals {
+        NEW_LINE, CLOSE_OBJECT, OPEN_OBJECT, OPEN_MAP, CLOSE_MAP, CLOSE_ARRAY, OPEN_ARRAY, LINE_COMMENT
+    }
+
     <FLUENT extends IElementFormatter> FLUENT appendComment(String aComment);
 
     <FLUENT extends IElementFormatter> FLUENT appendFieldValueReference(Object aObject);
@@ -16,6 +20,8 @@ public interface IElementFormatter {
     <PARENT extends IElementFormatter> PARENT close();
 
     int getIndentionLevel();
+
+    String getLiteral(final Literals aLiteralId);
 
     String toString();
 }

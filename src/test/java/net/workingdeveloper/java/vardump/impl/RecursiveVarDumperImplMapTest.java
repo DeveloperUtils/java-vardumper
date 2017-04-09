@@ -20,7 +20,7 @@ public class RecursiveVarDumperImplMapTest extends BaseTest {
         RecursiveVarDumperImpl      lSut = getRecursiveVarDumperSut();
         Map<String, TestPrimitives> d2   = new HashMap<>();
         System.out.println(lSut.vardump(d2));
-        assertThat(lSut.vardump(d2), matchesVarDump("HashMap@0000{\n}"));
+        assertThat(lSut.vardump(d2), matchesVarDump("HashMap@0000{\n} //HashMap@0000"));
     }
 
     @Test
@@ -59,7 +59,7 @@ public class RecursiveVarDumperImplMapTest extends BaseTest {
                         "\n  fBool: (Boolean)true," +
                         "\n  fFloat: (Float)3.4028235E38," +
                         "\n  fDouble: (Double)1.7976931348623157E308" +
-                        "\n}"));
+                        "\n} //HashMap@00000000"));
     }
 
     @Test
@@ -82,8 +82,8 @@ public class RecursiveVarDumperImplMapTest extends BaseTest {
                         "\n    fInt = (int)2147483647;" +
                         "\n    fShort = (short)32767;" +
                         "\n    fString = (String)\"hallo\";" +
-                        "\n  }" +
-                        "\n}")
+                        "\n  } //TestPrimitives@00000000" +
+                        "\n} //HashMap@00000000")
         );
     }
 }

@@ -11,25 +11,32 @@ import net.workingdeveloper.java.vardump.formatter.IObjectFormatter;
  */
 class ObjectFormatter extends ElementFormatter<IElementFormatter> implements IObjectFormatter {
 
+    private Object fObject;
+
     ObjectFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
         super(aIndention, aParent, aBuffer, aFactory);
     }
 
     @Override
     public <T> ElementFormatter open(T aObject) {
+        fObject = aObject;
         append(getObjectName(aObject, fFactory.isShortClassName()));
-        append("{");
+        append(getLiteral(Literals.OPEN_OBJECT));
         return this;
     }
 
     @Override
     public IFieldFormatter openField(String aName) {
-        append("\n");
-        return fFactory.createFieldFormatter(aName, fBuffer, getIndentionLevel()+1, this);
+        append(getLiteral(Literals.NEW_LINE));
+        return fFactory.createFieldFormatter(aName, fBuffer, getIndentionLevel() + 1, this);
     }
 
     @Override
     protected void appendClosing() {
-        append("\n").appendIndention().append("}");
+        append(getLiteral(Literals.NEW_LINE))
+                .appendIndention()
+                .append(getLiteral(Literals.CLOSE_OBJECT))
+                .append(" ").append(getLiteral(Literals.LINE_COMMENT))
+                .append(getObjectName(fObject, fFactory.isShortClassName()));
     }
 }

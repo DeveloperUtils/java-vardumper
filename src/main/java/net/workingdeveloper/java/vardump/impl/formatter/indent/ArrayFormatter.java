@@ -13,6 +13,7 @@ import java.util.Collection;
  */
 class ArrayFormatter extends ElementFormatter<IElementFormatter> implements IArrayFormatter {
 
+    private Object fArray;
     private int fEntryCount = 0;
 
     ArrayFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
@@ -21,6 +22,7 @@ class ArrayFormatter extends ElementFormatter<IElementFormatter> implements IArr
 
     @Override
     public <T> ElementFormatter open(T aArray) {
+        fArray = aArray;
         append(getObjectName(aArray, fFactory.isShortClassName()));
         int lSize = -1;
         if (aArray.getClass().isArray()) {
@@ -29,7 +31,7 @@ class ArrayFormatter extends ElementFormatter<IElementFormatter> implements IArr
             lSize = ((Collection) aArray).size();
         }
         append("(").append(Integer.toString(lSize)).append(")");
-        append("[");
+        append(getLiteral(Literals.OPEN_ARRAY));
 
         return this;
     }
@@ -37,13 +39,17 @@ class ArrayFormatter extends ElementFormatter<IElementFormatter> implements IArr
     @Override
     public IArrayEntryFormatter openEntry(Object aObject) {
         final IArrayEntryFormatter lArrayEntryFormatter = fFactory.createArrayEntryFormatter(
-                aObject, fBuffer, fEntryCount, getIndentionLevel()+1, this);
+                aObject, fBuffer, fEntryCount, getIndentionLevel() + 1, this);
         fEntryCount++;
         return lArrayEntryFormatter;
     }
 
     @Override
     protected void appendClosing() {
-        append("\n").appendIndention().append("]");
+        append(getLiteral(Literals.NEW_LINE))
+                .appendIndention()
+                .append(getLiteral(Literals.CLOSE_ARRAY))
+                .append(" ").append(getLiteral(Literals.LINE_COMMENT))
+                .append(getObjectName(fArray, fFactory.isShortClassName()));
     }
 }

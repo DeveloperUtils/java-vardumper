@@ -27,7 +27,16 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         assertThat(
                 lSut.vardump(lParent0),
                 matchesVarDump(
-                        "TestCyclic@0000{fChild = TestCyclic@0000{fChild = TestCyclic@0000{fChild = <null>; fParent = REF>>TestCyclic@0000; }; fParent = REF>>TestCyclic@0000; }; fParent = <null>; }"
+                        "TestCyclic@00000000{"
+                                + "\n  fChild = TestCyclic@00000000{"
+                                + "\n    fChild = TestCyclic@00000000{"
+                                + "\n      fChild = <null>;"
+                                + "\n      fParent = REF>>TestCyclic@00000000;"
+                                + "\n    } //TestCyclic@00000000;"
+                                + "\n    fParent = REF>>TestCyclic@00000000;"
+                                + "\n  } //TestCyclic@00000000;"
+                                + "\n  fParent = <null>;"
+                                + "\n} //TestCyclic@00000000"
                 )
         );
         System.out.println(lSut.vardump(lParent0));
@@ -91,7 +100,7 @@ public class RecursiveVarDumperImplTest extends BaseTest {
         Object                 d1   = new TestEmpty();
         assertThat(
                 lSut.vardump(d1),
-                matchesVarDump("TestEmpty@0000{}")
+                matchesVarDump("TestEmpty@0000{} //TestEmpty@00000000")
         );
         d1 = new TestPrimitives();
 
@@ -100,7 +109,7 @@ public class RecursiveVarDumperImplTest extends BaseTest {
                 matchesVarDump(
                         "TestPrimitives@0000{fBool = (boolean)false; fByte = (byte)0; fChar = (char)'" + String.valueOf(
                                 (char) 0) + "'; fDouble = (double)0.0;" +
-                                " fFloat = (float)0.0; fInt = (int)0; fShort = (short)0; fString = (String)<null>; }")
+                                " fFloat = (float)0.0; fInt = (int)0; fShort = (short)0; fString = (String)<null>; } //TestPrimitives@00000000")
         );
         d1 = new TestPrimitives(true, Byte.MAX_VALUE, 'g', 0.3d, 0.4f, Integer.MAX_VALUE, Short.MAX_VALUE, "hallo");
         assertThat(

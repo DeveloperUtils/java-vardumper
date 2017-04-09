@@ -59,6 +59,28 @@ abstract class ElementFormatter<PARENT extends IElementFormatter> implements IEl
         return fIndentation;
     }
 
+    @Override
+    public String getLiteral(final Literals aLiteralId) {
+        switch (aLiteralId) {
+
+            case NEW_LINE:
+                return "\n";
+            case CLOSE_OBJECT:
+            case CLOSE_MAP:
+                return "}";
+            case OPEN_OBJECT:
+            case OPEN_MAP:
+                return "{";
+            case CLOSE_ARRAY:
+                return "]";
+            case OPEN_ARRAY:
+                return "[";
+            case LINE_COMMENT:
+                return "//";
+        }
+        return "";
+    }
+
     public abstract <T> ElementFormatter open(T aObject);
 
     protected <FLUENT extends ElementFormatter> FLUENT append(CharSequence csq) {
@@ -85,14 +107,14 @@ abstract class ElementFormatter<PARENT extends IElementFormatter> implements IEl
         return (T) this;
     }
 
+    protected abstract void appendClosing();
+
     protected <FLUENT extends ElementFormatter> FLUENT appendIndention() {
         for (int i = 0; i < fIndentation; i++) {
             append(fFactory.getIndentationString());
         }
         return (FLUENT) this;
     }
-
-    protected abstract void appendClosing();
 
     protected String getClassName(Object aObject, boolean aAsSimpleName) {
         if (aAsSimpleName || fFactory.isShortClassName()) {

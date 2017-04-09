@@ -14,6 +14,7 @@ import java.util.Map;
 class MapFormatter extends ElementFormatter<IElementFormatter> implements IMapFormatter {
 
     private int fEntryCount = 0;
+    private Object fMap;
 
     MapFormatter(int aIndention, IElementFormatter aParent, Appendable aBuffer, FormatterFactory aFactory) {
         super(aIndention, aParent, aBuffer, aFactory);
@@ -21,8 +22,9 @@ class MapFormatter extends ElementFormatter<IElementFormatter> implements IMapFo
 
     @Override
     public <T> ElementFormatter open(T aMap) {
+        fMap = aMap;
         append(getObjectName(aMap, true));
-        append("{");
+        append(getLiteral(Literals.OPEN_MAP));
         return this;
     }
 
@@ -36,6 +38,11 @@ class MapFormatter extends ElementFormatter<IElementFormatter> implements IMapFo
 
     @Override
     protected void appendClosing() {
-        append("\n").appendIndention().append("}");
+        append(getLiteral(Literals.NEW_LINE))
+                .appendIndention()
+                .append(getLiteral(Literals.CLOSE_MAP))
+                .append(" ")
+                .append(getLiteral(Literals.LINE_COMMENT))
+                .append(getObjectName(fMap, true));
     }
 }
